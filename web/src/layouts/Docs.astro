@@ -11,44 +11,10 @@ const { title, description, slug, headings = [] } = Astro.props;
 const index = navigation.findIndex((item) => item.slug === slug);
 const previous = navigation[index - 1];
 const next = navigation[index + 1];
-const groups = [...new Set(navigation.map((item) => item.group))];
 ---
 
-<Site title={title} description={description} docs>
+<Site title={title} description={description} docs slug={slug}>
   <div class="docs-shell">
-    <aside class="docs-sidebar">
-      <details class="docs-nav" open>
-        <summary>
-          Documentation <span aria-hidden="true">⌄</span>
-        </summary>
-        <nav aria-label="Documentation">
-          {groups.map((group) => (
-            <div class="nav-group">
-              <p class="eyebrow">{group}</p>
-              {navigation
-                .filter((item) => item.group === group)
-                .map((item) => (
-                  <a
-                    href={docUrl(item.slug)}
-                    aria-current={slug === item.slug ? 'page' : undefined}
-                  >
-                    {item.title}
-                    <span aria-hidden="true">↗</span>
-                  </a>
-                ))}
-            </div>
-          ))}
-        </nav>
-      </details>
-      <div class="sidebar-note">
-        <span class="status-dot"></span> v0.1 alpha
-        <p>
-          An early version to try.
-          <br />
-          Built in the open.
-        </p>
-      </div>
-    </aside>
     <main id="main" class="docs-main">
       <header class="article-header">
         <p class="eyebrow">
@@ -86,18 +52,6 @@ const groups = [...new Set(navigation.map((item) => item.group))];
             <a href={`#${h.slug}`}>{h.text}</a>
           ))}
       </nav>
-      <div class="outline-note">
-        Keep your keys on your computer.
-        <br />
-        Choose what your AI can do.
-      </div>
     </aside>
   </div>
 </Site>
-<script>
-  const menu = document.querySelector<HTMLDetailsElement>('.docs-nav')!;
-  const desktop = matchMedia('(min-width: 801px)');
-  const adapt = () => (menu.open = desktop.matches);
-  adapt();
-  desktop.addEventListener('change', adapt);
-</script>
