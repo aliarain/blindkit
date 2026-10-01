@@ -1,0 +1,82 @@
+<section class="walkthrough" aria-labelledby="walkthrough-title">
+  <div class="walkthrough-top">
+    <span class="mono" id="walkthrough-title">
+      Try an example
+    </span>
+    <span class="demo-label">Nothing is sent</span>
+  </div>
+  <div class="demo-switch" role="group" aria-label="Example request type">
+    <button aria-pressed="true" data-mode="read">
+      Read a post
+    </button>
+    <button aria-pressed="false" data-mode="write">
+      Create a post
+    </button>
+  </div>
+  <div class="request-step">
+    <span class="step-dot">1</span>
+    <div>
+      <span class="eyebrow">Your AI asks</span>
+      <code id="demo-request" is:raw>Show me the first post</code>
+    </div>
+    <span class="tiny-label">Ask</span>
+  </div>
+  <div class="gate-box">
+    <div class="gate-title">
+      <img src="/favicon.svg" width="30" height="30" alt="" />
+      <strong>blindkit</strong>
+      <span id="rule-badge" class="rule-badge">
+        Allowed
+      </span>
+    </div>
+    <div class="gate-rule">
+      <span>Your API key</span>
+      <code>•••• •••• ••••</code>
+    </div>
+    <div class="gate-rule">
+      <span>Activity log</span>
+      <span id="intent-state">Saved before sending</span>
+    </div>
+  </div>
+  <div class="request-step">
+    <span class="step-dot">2</span>
+    <div>
+      <span class="eyebrow">Your app receives</span>
+      <code id="demo-http">Read post #1</code>
+    </div>
+    <span class="tiny-label">Send</span>
+  </div>
+  <div class="demo-result" role="status">
+    <span id="result-label">Your AI gets the result</span>
+    <code id="demo-result" is:raw>Post #1: Hello, world</code>
+  </div>
+  <button class="button demo-approve" id="demo-approve" hidden>
+    Approve this example <span aria-hidden="true">↗</span>
+  </button>
+  <p class="demo-footnote">This is a demo. It does not use real apps or API keys.</p>
+</section>
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-mode]');
+  const approve = document.querySelector<HTMLButtonElement>('#demo-approve')!;
+  const set = (id: string, text: string) => (document.getElementById(id)!.textContent = text);
+  for (const button of buttons)
+    button.addEventListener('click', () => {
+      const write = button.dataset.mode === 'write';
+      buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+      set('demo-request', write ? 'Create a post called “New post”' : 'Show me the first post');
+      set('demo-http', write ? 'Waiting — nothing sent' : 'Read post #1');
+      set('rule-badge', write ? 'Ask first' : 'Allowed');
+      set('intent-state', write ? 'Waiting for your approval' : 'Saved before sending');
+      set('result-label', write ? 'Your decision comes first' : 'Your AI gets the result');
+      set('demo-result', write ? 'Waiting for you. Nothing has changed.' : 'Post #1: Hello, world');
+      approve.hidden = !write;
+    });
+  approve.addEventListener('click', () => {
+    set('intent-state', 'Saved before sending');
+    set('demo-http', 'Create post — approved once');
+    set('result-label', 'You approved this example');
+    set('demo-result', 'Post #101: New post');
+    approve.hidden = true;
+    document.querySelector<HTMLButtonElement>('[data-mode="write"]')!.focus();
+  });
+</script>

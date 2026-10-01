@@ -1,0 +1,97 @@
+---
+import Brand from '../components/Brand.astro';
+import Search from '../components/Search.astro';
+import '../styles/site.css';
+interface Props {
+  title: string;
+  description?: string;
+  docs?: boolean;
+}
+const {
+  title,
+  description = 'Connect your AI assistant to your apps. Keep API keys on your computer and choose what your AI can do.',
+  docs = false,
+} = Astro.props;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} — Blindkit</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f6f5ef" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {canonical && <link rel="canonical" href={canonical} />}
+    {!Astro.site && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:title" content={`${title} — Blindkit`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    {canonical && <meta property="og:url" content={canonical} />}
+  </head>
+  <body class:list={{ 'docs-page': docs }}>
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
+    <header class="site-header">
+      <div class="header-inner">
+        <Brand />
+        <nav aria-label="Main navigation">
+          <a href="/#how-it-works">How it works</a>
+          <a href="/docs/" aria-current={docs ? 'page' : undefined}>
+            Docs
+          </a>
+          <a href="/docs/security/">Security</a>
+        </nav>
+        <div class="header-actions">
+          {docs ? (
+            <Search />
+          ) : (
+            <a class="button button-small" href="/docs/quickstart/">
+              Get started <span aria-hidden="true">↗</span>
+            </a>
+          )}
+        </div>
+      </div>
+    </header>
+    <slot />
+    <footer class="site-footer">
+      <div>
+        <Brand />
+        <p>Your AI can help. You set the rules.</p>
+      </div>
+      <nav aria-label="Footer">
+        <a href="/docs/">Documentation</a>
+        <a href="/docs/security/">Security</a>
+        <a href="https://github.com/aliarain/blindkit">GitHub</a>
+        <a href="/license.txt">MIT license</a>
+      </nav>
+      <span class="mono">Runs on your computer.</span>
+    </footer>
+    <div id="copy-status" class="sr-only" role="status"></div>
+    <script>
+      document.querySelectorAll<HTMLPreElement>('pre').forEach((pre) => {
+        if (!pre.querySelector('code')) return;
+        const button = document.createElement('button');
+        button.className = 'copy-code';
+        button.textContent = 'Copy';
+        button.setAttribute('aria-label', 'Copy code');
+        button.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(pre.querySelector('code')!.textContent ?? '');
+            button.textContent = 'Copied';
+            document.querySelector('#copy-status')!.textContent = 'Code copied to clipboard.';
+          } catch {
+            button.textContent = 'Select code';
+            document.querySelector('#copy-status')!.textContent =
+              'Clipboard unavailable. Select and copy the code manually.';
+          }
+          setTimeout(() => (button.textContent = 'Copy'), 2500);
+        });
+        pre.append(button);
+      });
+    </script>
+  </body>
+</html>

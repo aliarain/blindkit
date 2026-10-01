@@ -1,0 +1,46 @@
+{
+  "openapi": "3.0.3",
+  "info": { "title": "Demo posts", "version": "1.0.0" },
+  "servers": [{ "url": "https://jsonplaceholder.typicode.com" }],
+  "paths": {
+    "/posts/{id}": {
+      "get": {
+        "operationId": "getPost",
+        "summary": "Read a public demo post",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "minimum": 1 }
+          }
+        ],
+        "responses": { "200": { "description": "A post" } }
+      }
+    },
+    "/posts": {
+      "post": {
+        "operationId": "createPost",
+        "summary": "Create a simulated demo post (requires approval)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string" },
+                  "body": { "type": "string" },
+                  "userId": { "type": "integer" }
+                },
+                "required": ["title", "body", "userId"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "A simulated post" } }
+      }
+    }
+  }
+}

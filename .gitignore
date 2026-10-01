@@ -1,0 +1,17 @@
+node_modules
+dist
+.env
+.env.*
+!.env.example
+blindkit.json
+*.jsonl
+.DS_Store
+.pnpm-store
+artifacts/
+.astro/
+.wrangler/
+web/public/license.txt
+web/public/reference/
+opensrc/*
+!opensrc/REFERENCES.md
+.vercel/

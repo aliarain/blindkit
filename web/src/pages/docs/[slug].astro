@@ -1,0 +1,15 @@
+---
+import Docs from '../../layouts/Docs.astro';
+import { navigation, getDocument, documentHtml } from '../../lib/docs';
+export function getStaticPaths() {
+  return navigation
+    .filter((item) => !['', 'quickstart'].includes(item.slug))
+    .map((item) => ({ params: { slug: item.slug }, props: { item } }));
+}
+const { item } = Astro.props;
+const headings = getDocument(item.slug).getHeadings();
+---
+
+<Docs title={item.title} description={item.summary} slug={item.slug} headings={headings}>
+  <Fragment set:html={await documentHtml(item.slug)} />
+</Docs>

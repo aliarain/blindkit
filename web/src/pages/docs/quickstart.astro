@@ -1,0 +1,120 @@
+---
+import Docs from '../../layouts/Docs.astro';
+const headings = [
+  'Before you begin',
+  'Install and connect the example',
+  'Connect your AI app',
+  'Try it',
+  'Add an API key',
+  'If something fails',
+].map((text) => ({ depth: 2, text, slug: text.toLowerCase().replaceAll(' ', '-') }));
+const config = JSON.stringify(
+  {
+    mcpServers: {
+      blindkit: {
+        command: 'node',
+        args: [
+          '/absolute/path/blindkit/dist/cli.js',
+          'serve',
+          '--config',
+          '/absolute/path/blindkit/blindkit.json',
+        ],
+      },
+    },
+  },
+  null,
+  2,
+);
+---
+
+<Docs
+  title="Make your first connection."
+  description="Install Blindkit on your computer and ask your AI to read an example post."
+  slug="quickstart"
+  headings={headings}
+>
+  <h2 id="before-you-begin">Before you begin</h2>
+  <p>
+    This early version uses terminal commands. You need Git to download the code, a current patched
+    Node 22 or 24 to run it, and pnpm 10 to install its dependencies. You also need an AI app that
+    supports MCP, the standard for connecting AI to tools. To approve changes, that app must support
+    MCP approval forms, also called “form elicitation”.
+  </p>
+  <div class="callout">
+    <strong>No database setup.</strong>
+    <p>
+      Your settings and activity log are saved in files on your computer. Internet access is needed
+      for package installation and the public demo API.
+    </p>
+  </div>
+  <h2 id="install-and-connect-the-example">Install and connect the example</h2>
+  <p>Download the code, open its folder, then install Blindkit and add the example app:</p>
+  <pre><code>git clone https://github.com/aliarain/blindkit.git
+cd blindkit
+pnpm install --frozen-lockfile
+pnpm build
+node dist/cli.js init
+node dist/cli.js add examples/posts.openapi.json --name posts</code></pre>
+  <p>
+    This creates your settings file, <code>blindkit.json</code>, and connects JSONPlaceholder, a
+    public example API. It can return posts and simulate creating them. Creating a post still asks
+    for approval. If a settings file already exists, <code>init</code> leaves it alone.
+  </p>
+  <h2 id="connect-your-ai-app">Connect your AI app</h2>
+  <p>
+    Open your AI app’s MCP server settings and add the entry below. Replace both example paths with
+    the full path to your Blindkit folder. If the app cannot find Node, replace
+    <code>node</code> with the full path to the Node program.
+  </p>
+  <pre><code>{config}</code></pre>
+  <p>
+    Restart your AI app or reconnect the server. Blindkit should appear with two tools:
+    <code>search</code> finds an action and <code>execute</code> runs it. The settings location
+    depends on your AI app.
+  </p>
+  <h2 id="try-it">Try it</h2>
+  <p>
+    Ask your AI: “Use Blindkit to find <code>getPost</code> and show me the title of post 1.” The AI
+    can use this code:
+  </p>
+  <pre><code>{'const post = await tools.call("posts.getPost", { id: 1 });\nreturn { title: post.title };'}</code></pre>
+  <p>
+    You should get the post title back. Reading this example does not need approval by default. You
+    can find the activity log at <code>~/.blindkit/audit.jsonl</code>.
+  </p>
+  <h2 id="add-an-api-key">Add an API key</h2>
+  <p>
+    The example needs no API key. For an app that does, add a reference to its key in the source’s{' '}
+    <code>headers</code> setting:
+  </p>
+  <pre><code>{'{ "Authorization": "Bearer env://MY_API_TOKEN" }'}</code></pre>
+  <p>
+    <code>env://MY_API_TOKEN</code> names an environment variable: a value supplied to the program
+    when it starts. Set that variable through your AI app’s MCP environment settings. Keep the
+    actual key out of <code>blindkit.json</code> and AI conversations. Remote apps that receive keys
+    must use HTTPS.
+  </p>
+  <h2 id="if-something-fails">If something fails</h2>
+  <ul>
+    <li>
+      <strong>No config found:</strong> check the absolute <code>--config</code> path.
+    </li>
+    <li>
+      <strong>Change was declined:</strong> check that your AI app supports MCP approval forms.
+      Review and approve the request before the time limit.
+    </li>
+    <li>
+      <strong>Request took too long:</strong> the default is 15 seconds, including approval. Raise{' '}
+      <code>limits.timeoutMs</code> up to 120000 if needed.
+    </li>
+    <li>
+      <strong>Unsupported spec:</strong> review the{' '}
+      <a href="/docs/config/">supported OpenAPI formats</a>. YAML, OpenAPI 3.1, and external
+      references are not supported.
+    </li>
+  </ul>
+  <p>
+    Read the <a href="/docs/security/">security guide</a> before connecting an app with private data
+    or actions you cannot undo.
+  </p>
+</Docs>

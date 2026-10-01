@@ -1,0 +1,13 @@
+node_modules
+web/node_modules
+dist
+web/dist
+artifacts
+.pnpm-store
+.env*
+*.jsonl
+blindkit.json
+opensrc
+.git
+web/.astro
+web/.wrangler

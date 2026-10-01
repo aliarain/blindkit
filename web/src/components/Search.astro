@@ -1,0 +1,104 @@
+<button class="search-trigger" data-search-open>
+  <span aria-hidden="true">⌕</span> Search docs <kbd>⌘ K</kbd>
+</button>
+<dialog id="docs-search" aria-labelledby="search-title">
+  <div class="search-top">
+    <label id="search-title" for="search-input">
+      Search documentation
+    </label>
+    <button data-search-close aria-label="Close search">
+      ✕
+    </button>
+  </div>
+  <input
+    id="search-input"
+    type="search"
+    placeholder="Try “approval” or “credentials”"
+    autocomplete="off"
+  />
+  <p id="search-status" role="status">
+    Type to find a guide.
+  </p>
+  <ul id="search-results"></ul>
+  <p class="search-help">Tab to a result · Enter to open · Esc to close</p>
+</dialog>
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('#docs-search')!;
+  const input = document.querySelector<HTMLInputElement>('#search-input')!;
+  const list = document.querySelector('#search-results')!;
+  const status = document.querySelector('#search-status')!;
+  type Entry = { title: string; url: string; summary: string; text: string };
+  let entries: Entry[] | undefined;
+  let opener: HTMLElement | null = null;
+  async function openSearch(event?: Event) {
+    opener =
+      event?.currentTarget instanceof HTMLElement
+        ? event.currentTarget
+        : (document.activeElement as HTMLElement);
+    dialog.showModal();
+    input.focus();
+    if (!entries) {
+      status.textContent = 'Loading documentation…';
+      try {
+        const response = await fetch('/search.json');
+        if (!response.ok) throw new Error('Search unavailable');
+        entries = await response.json();
+        updateResults();
+      } catch {
+        status.textContent = 'Search could not load. Close this panel to browse the documentation.';
+      }
+    } else updateResults();
+  }
+  function updateResults() {
+    if (!entries) return;
+    const words = input.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    const matches = entries.filter((entry) =>
+      words.every((word) => `${entry.title} ${entry.text}`.toLowerCase().includes(word)),
+    );
+    list.replaceChildren();
+    for (const entry of matches) {
+      const item = document.createElement('li');
+      const link = document.createElement('a');
+      link.href = entry.url;
+      const title = document.createElement('strong');
+      title.textContent = entry.title;
+      const summary = document.createElement('span');
+      summary.textContent = entry.summary;
+      link.append(title, summary);
+      item.append(link);
+      list.append(item);
+    }
+    status.textContent = matches.length
+      ? `${matches.length} guides found`
+      : 'No guides found. Try “rules”, “API”, or “secrets”.';
+  }
+  document
+    .querySelectorAll('[data-search-open]')
+    .forEach((button) => button.addEventListener('click', openSearch));
+  document.querySelector('[data-search-close]')!.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('close', () => opener?.focus());
+  dialog.addEventListener('click', (event) => {
+    if (event.target === dialog) {
+      const r = dialog.getBoundingClientRect();
+      if (
+        event.clientX < r.left ||
+        event.clientX > r.right ||
+        event.clientY < r.top ||
+        event.clientY > r.bottom
+      )
+        dialog.close();
+    }
+  });
+  input.addEventListener('input', updateResults);
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && dialog.open) {
+      event.preventDefault();
+      dialog.close();
+    }
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+      event.preventDefault();
+      if (dialog.open) dialog.close();
+      else void openSearch();
+    }
+  });
+</script>

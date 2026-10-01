@@ -1,0 +1,79 @@
+---
+import Docs from '../../layouts/Docs.astro';
+const headings = [
+  { depth: 2, slug: 'what-it-does', text: 'What it does' },
+  { depth: 2, slug: 'choose-your-next-step', text: 'Choose your next step' },
+  { depth: 2, slug: 'current-boundaries', text: 'What you can use today' },
+];
+---
+
+<Docs
+  title="What is Blindkit?"
+  description="Connect your AI assistant to your apps, keep API keys out of its code, and choose what it can do."
+  slug=""
+  headings={headings}
+>
+  <div class="callout">
+    <strong>An early version to try.</strong>
+    <p>
+      You install Blindkit from its source code and run it on your computer. It is not yet on npm,
+      the package registry, and has not had an independent security review.
+    </p>
+  </div>
+  <h2 id="what-it-does">What it does</h2>
+  <p>
+    Blindkit sits between your AI assistant and an app you want it to use. You connect the app using
+    an OpenAPI file: a description of the actions its API supports. An API is how software talks to
+    an app. Your assistant can then find and use those actions.
+  </p>
+  <p>
+    For example, your AI can read a post. If it wants to create one, Blindkit asks you to approve
+    that specific request by default. Blindkit adds the API key when sending the request, so your AI
+    does not need to handle it. A local activity log records the request and its result.
+  </p>
+  <div class="doc-flow" aria-label="Request flow">
+    <span>Your AI</span>
+    <b aria-hidden="true">→</b>
+    <strong>Blindkit</strong>
+    <b aria-hidden="true">→</b>
+    <span>Your app</span>
+  </div>
+  <h2 id="choose-your-next-step">Choose your next step</h2>
+  <div class="guide-links">
+    <a href="/docs/quickstart/">
+      <strong>
+        Make your first connection <span aria-hidden="true">↗</span>
+      </strong>
+      <span>Install Blindkit, connect the example app, and try it.</span>
+    </a>
+    <a href="/docs/concepts/">
+      <strong>
+        Learn the basics <span aria-hidden="true">↗</span>
+      </strong>
+      <span>Source, Tool, Secret, Rule: four names you’ll see in the settings.</span>
+    </a>
+    <a href="/docs/security/">
+      <strong>
+        Read the security guide <span aria-hidden="true">↗</span>
+      </strong>
+      <span>How protection works and what you still need to check.</span>
+    </a>
+    <a href="/docs/config/">
+      <strong>
+        Choose your rules <span aria-hidden="true">↗</span>
+      </strong>
+      <span>Add API keys, allow or block actions, and set limits.</span>
+    </a>
+  </div>
+  <h2 id="current-boundaries">What you can use today</h2>
+  <p>
+    You need an AI app that supports MCP, a standard for connecting AI to tools. To approve
+    requests, the app also needs to show MCP approval forms (called “form elicitation”). You do not
+    need a database or cloud account.
+  </p>
+  <p>
+    This version supports OpenAPI 3.0 JSON files with some limits. It does not yet support OAuth
+    sign-in, GraphQL, connecting other MCP servers, or hosted team accounts. Check the{' '}
+    <a href="/docs/config/">supported formats</a> before connecting your app.
+  </p>
+</Docs>

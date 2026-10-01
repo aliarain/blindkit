@@ -1,0 +1,47 @@
+{
+  "name": "blindkit",
+  "version": "0.1.0-alpha.1",
+  "description": "A small local MCP gateway with host-side secrets and per-call approvals",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "blindkit": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "docs",
+    "examples"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "check": "tsc --noEmit",
+    "format:check": "prettier --check src test scripts/*.mjs",
+    "test": "pnpm build && node --test test/*.test.mjs",
+    "start": "node dist/cli.js",
+    "smoke": "pnpm build && node scripts/smoke.mjs",
+    "prepack": "pnpm build",
+    "package:check": "pnpm build && node scripts/check-package.mjs",
+    "web:dev": "pnpm --dir web dev",
+    "web:build": "pnpm --dir web build",
+    "web:check": "pnpm --dir web check && pnpm --dir web format:check && pnpm --dir web test"
+  },
+  "dependencies": {
+    "@apidevtools/swagger-parser": "13.1.0",
+    "@modelcontextprotocol/server": "2.2.0",
+    "ajv": "8.20.0",
+    "quickjs-emscripten": "0.32.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/client": "2.2.0",
+    "@types/node": "26.6.3",
+    "prettier": "3.9.9",
+    "typescript": "7.0.2"
+  },
+  "packageManager": "pnpm@10.13.1"
+}

@@ -1,0 +1,206 @@
+---
+import Site from '../layouts/Site.astro';
+import Walkthrough from '../components/Walkthrough.astro';
+---
+
+<Site title="Connect your AI assistant to your apps">
+  <main id="main">
+    <section class="hero container">
+      <div class="hero-copy">
+        <p class="eyebrow">
+          <span class="status-dot"></span> Connect AI to your apps{' '}
+          <span class="alpha-tag">v0.1 alpha</span>
+        </p>
+        <h1>
+          Your AI.
+          <br />
+          Your apps.
+          <br />
+          <em>Your rules.</em>
+        </h1>
+        <p class="hero-description">
+          Blindkit connects your AI assistant to your apps. Your AI never needs your API keys. You
+          choose which actions can run and which need your approval.
+        </p>
+        <div class="hero-actions">
+          <a class="button" href="/docs/quickstart/">
+            Get started <span aria-hidden="true">↗</span>
+          </a>
+          <a class="text-link" href="/docs/">
+            Read the docs <span aria-hidden="true">→</span>
+          </a>
+        </div>
+        <p class="hero-note mono">On your computer · Open source · No account needed</p>
+      </div>
+      <div class="hero-demo">
+        <div class="demo-caption">
+          <span class="mono">See what happens before a change</span>
+          <span aria-hidden="true">↙</span>
+        </div>
+        <Walkthrough />
+      </div>
+    </section>
+    <section id="how-it-works" class="section container">
+      <div class="section-heading">
+        <p class="eyebrow">How it works</p>
+        <h2>
+          Connect an app.
+          <br />
+          Let your AI help.
+        </h2>
+        <p>
+          Ask your AI to look something up or make a change. Blindkit checks your rules before
+          sending the request to the app.
+        </p>
+      </div>
+      <ol class="steps">
+        <li>
+          <span class="step-number mono">01 / Connect</span>
+          <h3>Connect an app.</h3>
+          <p>
+            Add an OpenAPI file that describes what the app can do. Blindkit turns those actions
+            into tools for your AI.
+          </p>
+          <code>Connect once</code>
+        </li>
+        <li>
+          <span class="step-number mono">02 / Discover</span>
+          <h3>Ask your AI to help.</h3>
+          <p>
+            Your assistant finds the action it needs and asks Blindkit to run it. For example, it
+            can read a post or create a new one.
+          </p>
+          <code>“Show me the first post.”</code>
+        </li>
+        <li>
+          <span class="step-number mono">03 / Decide</span>
+          <h3>Choose what is allowed.</h3>
+          <p>
+            Let an action run, ask to review it first, or block it. When approval is needed, your AI
+            has to wait for your decision.
+          </p>
+          <code>Allow · Ask first · Block</code>
+        </li>
+      </ol>
+    </section>
+    <section class="boundary-section">
+      <div class="container boundary-grid">
+        <div>
+          <p class="eyebrow">Your keys. Your decision.</p>
+          <h2>
+            Your AI can help.
+            <br />
+            You stay in charge.
+          </h2>
+          <p>
+            Blindkit sends requests for your AI. It checks the details, applies your rules, and adds
+            API keys on your computer.
+          </p>
+          <a class="light-link" href="/docs/security/">
+            Read how protection works <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <dl>
+          <div>
+            <dt>Limits on what can run</dt>
+            <dd>
+              AI-written code runs in a separate space with limits on time, memory, and the number
+              of requests.
+            </dd>
+          </div>
+          <div>
+            <dt>Ask before making changes</dt>
+            <dd>
+              Changes need your approval by default. A blocked action stays blocked, even if your AI
+              asks to run it.
+            </dd>
+          </div>
+          <div>
+            <dt>See what happened</dt>
+            <dd>
+              Blindkit saves a request before sending it, then records the result. If it cannot save
+              the request, it does not send it.
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+    <section class="section container getting-started">
+      <div>
+        <p class="eyebrow">Start small</p>
+        <h2>
+          Start with one app.
+          <br />
+          Run it on your computer.
+        </h2>
+        <p>
+          Follow the setup guide and try the included example. This early version needs a terminal
+          and an AI app that supports MCP, the standard for connecting AI to tools.
+        </p>
+        <a class="text-link" href="/docs/quickstart/">
+          Follow the setup guide <span aria-hidden="true">→</span>
+        </a>
+      </div>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <span class="mono">Run in your Blindkit folder</span>
+          <span class="terminal-dots" aria-hidden="true">
+            ● ● ●
+          </span>
+        </div>
+        <pre><code>pnpm install --frozen-lockfile
+pnpm build
+node dist/cli.js init
+node dist/cli.js add \
+  examples/posts.openapi.json --name posts</code></pre>
+        <p>You’ll need Node 22 or 24 and pnpm 10. The guide explains each step.</p>
+      </div>
+    </section>
+    <section class="container faq-section">
+      <div>
+        <p class="eyebrow">Before you connect</p>
+        <h2>A few clear answers.</h2>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>Is Blindkit ready for important work?</summary>
+          <p>
+            This is an early release for trying things out. Automated tests pass, but an outside
+            security review and testing with more AI apps are still needed. Read the{' '}
+            <a href="/docs/security/">security guide</a> before giving it access to important data.
+          </p>
+        </details>
+        <details>
+          <summary>Which apps can I connect?</summary>
+          <p>
+            You need an app with an OpenAPI 3.0 JSON file describing its API. Some formats and
+            sign-in methods are not supported yet. Check the{' '}
+            <a href="/docs/config/">supported formats</a>.
+          </p>
+        </details>
+        <details>
+          <summary>Does my AI see my API keys?</summary>
+          <p>
+            Blindkit keeps the keys you configure on your computer and hides known keys from
+            returned data. This does not hide every possible secret or private detail. Only connect
+            apps and an AI client you trust.
+          </p>
+        </details>
+        <details>
+          <summary>What if my AI app cannot ask for approval?</summary>
+          <p>
+            Actions you have allowed still work. An action that needs approval is stopped if your AI
+            app cannot show the approval form. Your AI cannot approve itself.
+          </p>
+        </details>
+      </div>
+    </section>
+    <section class="closing container">
+      <span class="eyebrow">Start with a simple example.</span>
+      <h2>Put your AI to work. Set the rules.</h2>
+      <a class="button" href="/docs/quickstart/">
+        Get started <span aria-hidden="true">↗</span>
+      </a>
+    </section>
+  </main>
+</Site>
