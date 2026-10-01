@@ -10,6 +10,8 @@ Status: v0.1 alpha, not yet published to npm or independently security audited. 
 
 No database, Redis, Docker, or cloud account is required. Blindkit stores configuration and audit records in local files. You need an MCP client for agent use, access to the APIs you configure, and their credentials when authentication is required. Approval-required calls need a client with MCP form elicitation support.
 
+[Website](https://blindkit.vercel.app/) · [Setup guide](https://blindkit.vercel.app/docs/quickstart/) · [GitHub](https://github.com/aliarain/blindkit)
+
 ## Run from source
 
 Run these commands from this `blindkit/` directory:

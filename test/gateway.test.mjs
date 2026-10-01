@@ -157,7 +157,10 @@ test('infinite loops, unresolved promises, and stalled HTTP all time out', async
     assert.equal(result.ok, false);
     assert.ok(Date.now() - before < 2500);
   }
-  assert.equal((await gateway.execute('return 42')).ok, true);
+  // Recovery checks host reuse, not cold worker startup within the short timeout above.
+  gateway.config.limits.timeoutMs = 5000;
+  const recovered = await gateway.execute('return 42');
+  assert.deepEqual(recovered, { ok: true, result: 42, logs: [] });
 });
 
 test('a stalled approval is cancelled without dispatch', async (t) => {

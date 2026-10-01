@@ -14,7 +14,8 @@
 - [x] Regression tests for security boundaries and CLI/MCP integration
 - [x] Independent MIT implementation and CI workflow
 - [x] Static landing page and documentation package in `web/`
-- [ ] Publish website preview and connect an owned domain
+- [x] Publish website at https://blindkit.vercel.app with GitHub connected to Vercel
+- [ ] Connect an owned domain
 - [ ] README demo GIF
 
 ## v0.2 candidates (prioritize from actual use)
@@ -34,7 +35,8 @@ GraphQL, proxy upstream MCP servers, OAuth, 1Password, desktop tray app, optiona
 
 ## Launch checklist
 - [ ] Buy blindkit.com (+ .dev)
-- [ ] Reserve npm `blindkit`, GitHub repo, X handle
+- [x] Publish GitHub repository: https://github.com/aliarain/blindkit
+- [ ] Publish npm package and reserve X handle
 - [ ] Trademark sanity check on "Blindkit"
 - [x] Cache the seven original reference sources and inspect dependency implementations
 - [ ] Independent security review and broader client compatibility testing
