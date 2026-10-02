@@ -1,16 +1,19 @@
 ---
 import Brand from '../components/Brand.astro';
 import Search from '../components/Search.astro';
+import { navigation, docUrl } from '../lib/docs';
 import '../styles/site.css';
 interface Props {
   title: string;
   description?: string;
   docs?: boolean;
+  slug?: string;
 }
 const {
   title,
   description = 'Connect your AI assistant to your apps. Keep API keys on your computer and choose what your AI can do.',
   docs = false,
+  slug = '',
 } = Astro.props;
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
 ---
@@ -22,7 +25,7 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : un
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title} — Blindkit</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#f6f5ef" />
+    <meta name="theme-color" content="#ffffff" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     {canonical && <link rel="canonical" href={canonical} />}
     {!Astro.site && <meta name="robots" content="noindex, nofollow" />}
@@ -35,43 +38,86 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : un
     <a class="skip-link" href="#main">
       Skip to content
     </a>
-    <header class="site-header">
-      <div class="header-inner">
-        <Brand />
-        <nav aria-label="Main navigation">
-          <a href="/#how-it-works">How it works</a>
-          <a href="/docs/" aria-current={docs ? 'page' : undefined}>
-            Docs
-          </a>
-          <a href="/docs/security/">Security</a>
-        </nav>
-        <div class="header-actions">
-          {docs ? (
-            <Search />
-          ) : (
-            <a class="button button-small" href="/docs/quickstart/">
-              Get started <span aria-hidden="true">↗</span>
-            </a>
-          )}
+    <div class="site-shell">
+      <aside class="site-rail">
+        <div class="rail-top">
+          <Brand />
+          {docs && <Search />}
         </div>
+        <nav class="primary-nav" aria-label="Main navigation">
+          <a href="/" aria-current={!docs ? 'page' : undefined}>
+            Overview
+          </a>
+          <a href="/docs/" aria-current={docs ? 'page' : undefined}>
+            Documentation
+          </a>
+          <a href="https://github.com/aliarain/blindkit">
+            GitHub <span aria-hidden="true">↗</span>
+          </a>
+        </nav>
+        {docs ? (
+          <details class="docs-nav" open>
+            <summary>
+              Browse the docs <span aria-hidden="true">⌄</span>
+            </summary>
+            <nav aria-label="Documentation">
+              {[...new Set(navigation.map((item) => item.group))].map((group) => (
+                <div class="nav-group">
+                  <p class="eyebrow">{group}</p>
+                  {navigation
+                    .filter((item) => item.group === group)
+                    .map((item) => (
+                      <a
+                        href={docUrl(item.slug)}
+                        aria-current={slug === item.slug ? 'page' : undefined}
+                      >
+                        {item.title}
+                      </a>
+                    ))}
+                </div>
+              ))}
+            </nav>
+          </details>
+        ) : (
+          <nav class="section-nav" aria-label="On this page">
+            <p class="eyebrow">On this page</p>
+            <a href="/#how-it-works">How it works</a>
+            <a href="/#your-rules">Your rules</a>
+            <a href="/#setup">Set up Blindkit</a>
+            <a href="/#questions">Questions</a>
+          </nav>
+        )}
+        <div class="rail-note">
+          <span class="release-tag">v0.1 alpha</span>
+          <p>Small. Local. Open source.</p>
+          <a href="/docs/security/">Security &amp; limitations</a>
+        </div>
+      </aside>
+      <div class="site-body">
+        <slot />
+        <footer class="site-footer">
+          <span>
+            Blindkit <span class="footer-license">/ MIT licensed</span>
+          </span>
+          <nav aria-label="Footer">
+            <a href="/docs/">Docs</a>
+            <a href="https://github.com/aliarain/blindkit">Source</a>
+            <a href="/license.txt">License</a>
+          </nav>
+        </footer>
       </div>
-    </header>
-    <slot />
-    <footer class="site-footer">
-      <div>
-        <Brand />
-        <p>Your AI can help. You set the rules.</p>
-      </div>
-      <nav aria-label="Footer">
-        <a href="/docs/">Documentation</a>
-        <a href="/docs/security/">Security</a>
-        <a href="https://github.com/aliarain/blindkit">GitHub</a>
-        <a href="/license.txt">MIT license</a>
-      </nav>
-      <span class="mono">Runs on your computer.</span>
-    </footer>
+    </div>
     <div id="copy-status" class="sr-only" role="status"></div>
     <script>
+      const menu = document.querySelector<HTMLDetailsElement>('.docs-nav');
+      if (menu) {
+        const desktop = matchMedia('(min-width: 821px)');
+        function adaptMenu() {
+          menu!.open = desktop.matches;
+        }
+        adaptMenu();
+        desktop.addEventListener('change', adaptMenu);
+      }
       document.querySelectorAll<HTMLPreElement>('pre').forEach((pre) => {
         if (!pre.querySelector('code')) return;
         const button = document.createElement('button');
