@@ -3,130 +3,128 @@ import Site from '../layouts/Site.astro';
 import Walkthrough from '../components/Walkthrough.astro';
 ---
 
-<Site title="Connect your AI to the apps you use">
+<Site title="Connect your AI to your apps">
   <main id="main" class="home-content">
-    <header class="home-intro">
-      <p class="eyebrow">Open source · Runs on your computer</p>
-      <h1>Connect your AI to the apps you use.</h1>
-      <p class="intro-description">
-        Blindkit lets your AI read data and take actions in your apps. You decide what it can do.
-        Your API keys stay out of the AI’s code.
+    <header class="hero">
+      <p class="release-pill">
+        <span aria-hidden="true"></span> Open source <span aria-hidden="true">/</span> v0.1 alpha
       </p>
-      <div class="intro-actions">
+      <h1>Connect your AI to your apps.</h1>
+      <p class="hero-description">
+        Blindkit checks each request against your rules. API keys stay out of the AI’s code, and
+        changes ask for your approval by default.
+      </p>
+      <div class="hero-actions">
         <a class="button" href="/docs/quickstart/">
-          Set up Blindkit <span aria-hidden="true">→</span>
+          Get started <span aria-hidden="true">→</span>
         </a>
-        <a class="text-link" href="/docs/">
-          Read the introduction
+        <a class="secondary-button" href="#how-it-works">
+          Try an example
         </a>
       </div>
-      <p class="small-note">Free to use. No Blindkit account or database needed.</p>
+      <p class="hero-note">Runs on your computer. No Blindkit account needed.</p>
     </header>
 
-    <section id="how-it-works" class="home-section example-section">
-      <div class="section-label">
-        <h2>One connection. You choose the actions.</h2>
-        <span class="small-note">An interactive example</span>
+    <section id="how-it-works" class="demo-section" aria-labelledby="example-title">
+      <div class="demo-heading">
+        <h2 id="example-title">Request preview</h2>
+        <span>Choose an action to see what happens</span>
       </div>
-      <p>
-        Connect an app, ask your AI for help, and let Blindkit check the request before it goes
-        through.
-      </p>
       <Walkthrough />
     </section>
 
-    <section id="your-rules" class="home-section">
-      <h2>A little help, with clear limits.</h2>
-      <p>Give your AI useful tools without handing over every decision.</p>
-      <dl class="feature-list">
-        <div>
-          <dt>Choose when to ask.</dt>
-          <dd>
-            Allow an action, ask for approval, or block it. Changes ask first by default. An
-            approval applies to one specific request.
-          </dd>
-        </div>
-        <div>
-          <dt>Keep keys out of the conversation.</dt>
-          <dd>
-            Blindkit adds your API key when it sends a request. Your AI does not need to read or
-            handle the key.
-          </dd>
-        </div>
-        <div>
-          <dt>See what happened.</dt>
-          <dd>
-            A local activity log records each request and its result. If Blindkit cannot record a
-            request, it does not send it.
-          </dd>
-        </div>
-      </dl>
-      <a class="text-link" href="/docs/security/">
-        How protection works, and its limits <span aria-hidden="true">→</span>
-      </a>
-    </section>
-
-    <section id="setup" class="home-section">
-      <h2>Start with the included example.</h2>
-      <p>
-        Download the code and connect a sample app. Then add Blindkit to an AI app that supports
-        MCP, the standard for connecting AI to tools.
-      </p>
-      <div class="install-example">
-        <div class="code-label">
-          In your terminal <span>Node 22 or 24 · pnpm 10</span>
-        </div>
-        <pre><code>git clone https://github.com/aliarain/blindkit.git
-cd blindkit
-pnpm install --frozen-lockfile
-pnpm build
-node dist/cli.js init
-node dist/cli.js add examples/posts.openapi.json --name posts</code></pre>
+    <section class="benefits" aria-label="What Blindkit gives you">
+      <div>
+        <h2>Keys stay private.</h2>
+        <p>Blindkit adds API keys when sending requests. Your AI never needs to handle them.</p>
       </div>
-      <a class="text-link" href="/docs/quickstart/">
-        Continue with the setup guide <span aria-hidden="true">→</span>
-      </a>
-      <div class="release-note">
-        <span class="release-tag">v0.1 alpha</span>
-        <p>
-          This is an early release for trying things out. It has not had an independent security
-          review. Start with the example before connecting important data.
-        </p>
+      <div>
+        <h2>Permissions are explicit.</h2>
+        <p>Let an action run, ask first, or block it. Changes need approval by default.</p>
+      </div>
+      <div>
+        <h2>Requests are recorded.</h2>
+        <p>Requests and results go into an activity log on your computer.</p>
       </div>
     </section>
 
-    <section id="questions" class="home-section questions-section">
-      <h2>A few things to know.</h2>
-      <details>
-        <summary>Which apps can I connect?</summary>
+    <section id="setup" class="setup-section">
+      <div>
+        <p class="eyebrow">Start with one app</p>
+        <h2>Run it locally.</h2>
         <p>
-          Apps with an OpenAPI 3.0 JSON file describing their API. Some formats and sign-in methods
-          are not supported yet. Check the <a href="/docs/config/">supported formats</a> before
-          connecting an app.
+          The setup guide walks you through installing Blindkit and trying a sample API with your AI
+          assistant.
         </p>
-      </details>
-      <details>
-        <summary>Where does Blindkit run?</summary>
+        <a class="button" href="/docs/quickstart/">
+          Follow the setup guide <span aria-hidden="true">→</span>
+        </a>
+      </div>
+      <ol class="setup-steps">
+        <li>
+          <span aria-hidden="true">1</span>
+          <div>
+            <h3>Connect an app</h3>
+            <p>Add its OpenAPI file—a list of the actions its API supports.</p>
+          </div>
+        </li>
+        <li>
+          <span aria-hidden="true">2</span>
+          <div>
+            <h3>Set your rules</h3>
+            <p>Choose which actions can run and which need approval.</p>
+          </div>
+        </li>
+        <li>
+          <span aria-hidden="true">3</span>
+          <div>
+            <h3>Ask your AI</h3>
+            <p>Use an AI app that supports MCP to find and run an action.</p>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section id="questions" class="questions-section">
+      <div>
+        <h2>Before you connect.</h2>
         <p>
-          On your computer. Your settings and activity log are local files. Requests go to the APIs
-          you connect. You do not need a hosted Blindkit account or a database.
+          Still exploring? <a href="/docs/">Start with the introduction.</a>
         </p>
-      </details>
-      <details>
-        <summary>Can my AI approve its own changes?</summary>
-        <p>
-          No. When approval is required, your AI app must show you an approval form. If it cannot,
-          Blindkit stops the request. Use an AI app you trust to show the form and report your
-          answer.
-        </p>
-      </details>
-      <details>
-        <summary>Is it open source?</summary>
-        <p>
-          Yes. The code is available on <a href="https://github.com/aliarain/blindkit">GitHub</a>{' '}
-          under the MIT license. You can read it, run it, and change it.
-        </p>
-      </details>
+      </div>
+      <div class="questions-list">
+        <details>
+          <summary>Which apps can I connect?</summary>
+          <p>
+            Apps with an OpenAPI 3.0 JSON file describing their API. Some formats and sign-in
+            methods are not supported yet. Check the <a href="/docs/config/">supported formats</a>{' '}
+            before connecting an app.
+          </p>
+        </details>
+        <details>
+          <summary>Do I need a server or database?</summary>
+          <p>
+            No. Blindkit runs on your computer and saves settings and activity in local files. Setup
+            needs Node 22 or 24, pnpm 10, and an AI app that supports MCP.
+          </p>
+        </details>
+        <details>
+          <summary>Can my AI approve its own changes?</summary>
+          <p>
+            No. Your AI app must show you an approval form when one is required. If it cannot,
+            Blindkit stops the request. Use an AI app you trust to show the form and report your
+            answer.
+          </p>
+        </details>
+        <details>
+          <summary>Is it ready for important work?</summary>
+          <p>
+            This is an early release for trying things out. An independent security review and
+            broader testing with AI apps are still needed. Start with the included example and read
+            the <a href="/docs/security/">security guide</a> before connecting important data.
+          </p>
+        </details>
+      </div>
     </section>
   </main>
 </Site>

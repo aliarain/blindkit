@@ -15,6 +15,30 @@ const next = navigation[index + 1];
 
 <Site title={title} description={description} docs slug={slug}>
   <div class="docs-shell">
+    <aside class="docs-sidebar">
+      <details class="docs-nav" open>
+        <summary>
+          Browse the docs <span aria-hidden="true">⌄</span>
+        </summary>
+        <nav aria-label="Documentation">
+          {[...new Set(navigation.map((item) => item.group))].map((group) => (
+            <div class="nav-group">
+              <p class="eyebrow">{group}</p>
+              {navigation
+                .filter((item) => item.group === group)
+                .map((item) => (
+                  <a
+                    href={docUrl(item.slug)}
+                    aria-current={slug === item.slug ? 'page' : undefined}
+                  >
+                    {item.title}
+                  </a>
+                ))}
+            </div>
+          ))}
+        </nav>
+      </details>
+    </aside>
     <main id="main" class="docs-main">
       <header class="article-header">
         <p class="eyebrow">

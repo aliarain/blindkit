@@ -1,89 +1,108 @@
-<figure class="connection-example">
-  <div class="connection-path" aria-label="Your AI sends a request through Blindkit to your app">
-    <div class="connection-node">
-      <span class="node-icon" aria-hidden="true">
-        ✳
-      </span>
-      <strong>Your AI</strong>
-      <span>Asks for an action</span>
-    </div>
-    <span class="connection-line" aria-hidden="true">
-      →
-    </span>
-    <div class="connection-node connection-center">
-      <img src="/favicon.svg" width="32" height="32" alt="" />
-      <strong>Blindkit</strong>
-      <span>Checks your rules</span>
-    </div>
-    <span class="connection-line" aria-hidden="true">
-      →
-    </span>
-    <div class="connection-node">
-      <span class="node-icon" aria-hidden="true">
-        ↗
-      </span>
-      <strong>Your app</strong>
-      <span>Receives the request</span>
-    </div>
-  </div>
+<div class="permission-demo">
   <div class="example-controls" role="group" aria-label="Example action">
-    <span>Try an action</span>
-    <button aria-pressed="true" data-mode="read">
-      Read a post
+    <button aria-pressed="false" data-mode="read">
+      Read data
     </button>
-    <button aria-pressed="false" data-mode="write">
-      Create a post
+    <button aria-pressed="true" data-mode="write">
+      Make a change
     </button>
-  </div>
-  <div class="example-request">
-    <span>Your AI asks</span>
-    <p id="demo-request">“Show me the first post.”</p>
-  </div>
-  <div class="example-outcome" role="status">
-    <span id="rule-badge" class="decision-label">
-      Allowed
-    </span>
-    <p id="demo-result">The post is returned. No approval needed.</p>
-  </div>
-  <div class="example-decision" id="example-decision" hidden>
-    <button class="button" id="demo-approve">
-      Approve this example
-    </button>
-    <button class="secondary-button" id="demo-decline">
-      Decline
+    <button aria-pressed="false" data-mode="block">
+      Block an action
     </button>
   </div>
-  <figcaption>Demo only. No real requests or API keys are used.</figcaption>
-</figure>
+  <div class="permission-body">
+    <div class="request-preview">
+      <p class="demo-label">Request from your AI</p>
+      <div class="request-message">
+        <p id="demo-request">Create a post called “Hello, world”.</p>
+      </div>
+      <p class="request-context">App: sample posts API</p>
+      <div class="key-note">
+        <svg
+          aria-hidden="true"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+        >
+          <rect x="5" y="10" width="14" height="11" rx="2" />
+          <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+        </svg>{' '}
+        API key hidden from the AI
+      </div>
+    </div>
+    <div class="decision-preview">
+      <div class="decision-heading">
+        <span class="demo-label">Rule check</span>
+        <span id="rule-badge" class="decision-label">
+          Ask first
+        </span>
+      </div>
+      <div class="decision-content" role="status">
+        <h3 id="decision-title">This change needs your approval.</h3>
+        <p id="demo-result">Nothing has been sent. You decide whether this request goes through.</p>
+      </div>
+      <div class="example-decision" id="example-decision">
+        <button class="button" id="demo-approve">
+          Approve once
+        </button>
+        <button class="secondary-button" id="demo-decline">
+          Decline
+        </button>
+      </div>
+    </div>
+  </div>
+  <p class="demo-caption">
+    <span class="demo-status-dot" aria-hidden="true"></span> Interactive example{' '}
+    <span>Nothing connects to a real app.</span>
+  </p>
+</div>
 <script>
   const modeButtons = document.querySelectorAll<HTMLButtonElement>('[data-mode]');
   const decision = document.querySelector<HTMLDivElement>('#example-decision')!;
   const badge = document.querySelector<HTMLSpanElement>('#rule-badge')!;
   const result = document.querySelector<HTMLParagraphElement>('#demo-result')!;
   const request = document.querySelector<HTMLParagraphElement>('#demo-request')!;
-  function selectExample(write: boolean) {
+  const title = document.querySelector<HTMLHeadingElement>('#decision-title')!;
+  function selectExample(mode: string) {
     modeButtons.forEach((button) =>
-      button.setAttribute('aria-pressed', String((button.dataset.mode === 'write') === write)),
+      button.setAttribute('aria-pressed', String(button.dataset.mode === mode)),
     );
-    request.textContent = write
-      ? '“Create a post called Hello, world.”'
-      : '“Show me the first post.”';
-    badge.textContent = write ? 'Ask first' : 'Allowed';
-    result.textContent = write
-      ? 'Waiting for your approval. Nothing has been sent.'
-      : 'The post is returned. No approval needed.';
-    decision.hidden = !write;
+    decision.hidden = mode !== 'write';
+    if (mode === 'read') {
+      request.textContent = 'Show me the first post.';
+      badge.textContent = 'Allowed';
+      title.textContent = 'This request can go through.';
+      result.textContent =
+        'The example post is returned. Your rule allows this read without approval.';
+      return;
+    }
+    if (mode === 'block') {
+      request.textContent = 'Delete the first post.';
+      badge.textContent = 'Blocked';
+      title.textContent = 'This action is off limits.';
+      result.textContent =
+        'Your rule blocks this request. Nothing is sent, even if the AI asks again.';
+      return;
+    }
+    request.textContent = 'Create a post called “Hello, world”.';
+    badge.textContent = 'Ask first';
+    title.textContent = 'This change needs your approval.';
+    result.textContent = 'Nothing has been sent. You decide whether this request goes through.';
   }
   function finishExample(approved: boolean) {
     badge.textContent = approved ? 'Approved once' : 'Declined';
+    title.textContent = approved ? 'Request approved.' : 'Your decision stops the request.';
     result.textContent = approved
-      ? 'The example post is created. This approval is used up.'
-      : 'The request is stopped. Nothing has changed.';
+      ? 'The example post is created. The next change will ask you again.'
+      : 'Nothing has changed. This request was not sent.';
     decision.hidden = true;
     document.querySelector<HTMLButtonElement>('[data-mode="write"]')!.focus();
   }
   modeButtons.forEach((button) =>
-    button.addEventListener('click', () => selectExample(button.dataset.mode === 'write')),
+    button.addEventListener('click', () => selectExample(button.dataset.mode!)),
   );
   document.querySelector('#demo-approve')!.addEventListener('click', () => finishExample(true));
   document.querySelector('#demo-decline')!.addEventListener('click', () => finishExample(false));
